@@ -1,10 +1,8 @@
 package com.example.order.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.order.model.Product;
 import com.example.order.service.ProductService;
@@ -16,9 +14,10 @@ import ch.qos.logback.core.model.Model;
 public class ProductController {	
 	
 	@GetMapping("/products")
-	public String showProducts() {
+	@ResponseBody
+	public ResponseEntity<String> showProducts() {
 		System.out.println("In products");
-		return "I love Ankur";
+		return ResponseEntity.ok("Returned from products");
 	}
 	
 	@GetMapping("/place_order")

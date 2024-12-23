@@ -1,12 +1,12 @@
 package com.example.UserService.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import com.example.UserService.service.LoginService;
 
@@ -56,34 +56,36 @@ public class UserController {
 
 	// Login User endpoint
 	@PostMapping("/login")
-	public String login(@RequestParam String email, @RequestParam String password, Model model) {
+	@ResponseBody
+	public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, Model model) {
 
 		// Call the service to authenticate the user
 		String authenticationResult = loginService.authenticateUser(email, password);
 		System.out.println(authenticationResult);
 
-		// If authentication is successful, redirect to home page
+		// If authentication is successful, fetch product data using WebClient
 		if (authenticationResult.startsWith("Login Successful")) {
 			System.out.println("Inside login controller 1");
-			model.addAttribute("message", authenticationResult);
-			// return "redirect:http//localhost:8091/api/orders/products";
-			
-			 String productResponse = webClientBuilder.baseUrl("http://localhost:8091")
-		                .build()
-		                .get()
-		                .uri("/api/orders/products")
-		                .retrieve()
-		                .bodyToMono(String.class)
-		                .block();  // This makes the call synchronous
-		            
-		            System.out.println("Product response: " + productResponse);
-		          //  return productResponse;
+
+			// Fetching product data using WebClient
+			String productResponse = webClientBuilder.baseUrl("http://localhost:8091")
+					.build()
+					.get()
+					.uri("/api/orders/products")
+					.retrieve()
+					.bodyToMono(String.class)
+					.block();  // This makes the call synchronous
+
+			System.out.println("Product response: " + productResponse);
+
+			// Return a successful response with the product data
+			return ResponseEntity.ok(productResponse); // 200 OK with the product data
 		} else {
 			// If authentication fails, return to login page with error message
 			System.out.println("Inside login controller 2");
-			model.addAttribute("error", authenticationResult);
-			return "login";
+
+			// Return error response with 401 Unauthorized status
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authenticationResult);
 		}
-		return authenticationResult;
 	}
 }
