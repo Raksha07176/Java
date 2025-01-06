@@ -14,10 +14,9 @@ import ch.qos.logback.core.model.Model;
 public class ProductController {	
 	
 	@GetMapping("/products")
-	@ResponseBody
-	public ResponseEntity<String> showProducts() {
-		System.out.println("In products");
-		return ResponseEntity.ok("Returned from products");
+	public String showProducts() {
+		//System.out.println("In products");
+		return "product";
 	}
 	
 	@GetMapping("/place_order")

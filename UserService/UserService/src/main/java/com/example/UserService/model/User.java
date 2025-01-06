@@ -18,12 +18,12 @@ public class User {
 	private String email;
 	private String password;
 	private String address;
-	private int pincode;
-	private int contact;
+	private long pincode;
+	private long contact;
 	
 	public User() {}
 	
-	public User(String name, String email, String password, String address, int pincode, int contact) {
+	public User(String name, String email, String password, String address, long pincode, long contact) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -70,22 +70,22 @@ public class User {
 	}
 
 
-	public int getPincode() {
+	public long getPincode() {
 		return pincode;
 	}
 
 
-	public void setPincode(int pincode) {
+	public void setPincode(long pincode) {
 		this.pincode = pincode;
 	}
 
 
-	public int getContact() {
+	public long getContact() {
 		return contact;
 	}
 
 
-	public void setContact(int contact) {
+	public void setContact(long contact) {
 		this.contact = contact;
 	}
 	

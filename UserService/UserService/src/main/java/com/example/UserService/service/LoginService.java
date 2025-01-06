@@ -19,18 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 	    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	    // Register a new user
-	    public String registerUser(String email, String password, String name, String address, int pincode, int contact) {
+	    public String registerUser(String email, String password, String name, String address, long pincode, long contact) {
 	        // Check if the email already exists in the database
 	        if (userRepository.existsByEmail(email)) {
 	            return "Email is already taken!";
 	        }
-
+			System.out.println("In loginService");
 	        // Hash the password
 	        String hashedPassword = passwordEncoder.encode(password);
 
 	        // Create a new User object
 	        User newUser = new User(name, email, hashedPassword, address, pincode, contact);
-
+			System.out.println("In login service 2");
 	        // Save the user to the database using the repository
 	        userRepository.save(newUser);
 
@@ -58,5 +58,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 	            return "User not found!";
 	        }
 	    }
+
+		public String updateUser(int id, String email, String password, String name, String address, int pincode, int contact) {
+			// Find the user by userId (assuming userId is unique)
+			User existingUser = userRepository.findById(id).orElse(null);
+			if (existingUser == null) {
+				return "User not found.";
+			}
+
+			// Update the user details
+			existingUser.setPassword(password);
+			existingUser.setAddress(address);
+			existingUser.setPincode(pincode);
+			existingUser.setContact(contact);
+
+			// Save the updated user
+			userRepository.save(existingUser);
+			return "User updated successfully.";
+		}
+
+
+		public String deleteUser(int id) {
+			// Find the user by userId
+			User existingUser = userRepository.findById(id).orElse(null);
+			if (existingUser == null) {
+				return "User not found.";
+			}
+
+			// Delete the user
+			userRepository.delete(existingUser);
+			return "User deleted successfully.";
+		}
 	}
 
